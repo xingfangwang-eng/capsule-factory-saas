@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Head } from "next/document";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -27,17 +28,22 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-WC4677QJMF"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  // 动态注入项目名
-  gtag('config', 'G-WC4677QJMF', {
-    'project_name': 'capsule-factory-saas'
-  });
-</script>
+      <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-WC4677QJMF"></script>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            // 动态注入项目名
+            gtag('config', 'G-WC4677QJMF', {
+              'project_name': 'capsule-factory-saas'
+            });
+          `
+        }} />
+
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
