@@ -311,10 +311,10 @@ export default function PokemonDamageCalculator() {
 
   return (
     <PayPalScriptProvider options={{
-      clientId: 'test',
+      clientId: 'AY-XjoUPHJWDAN9AbqcmHZpe2utMwuoys6f2_S4LBxG3genZkRD-9b2AliBmpjAE_TtukODQHP2OBlg6',
       currency: 'USD',
       components: 'buttons',
-      disableFunding: 'credit,card,p24,bancontact,blik,eps,giropay,ideal,mybank,paybright,paysafecard,sofort'
+      locale: 'en_US'
     }}>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
@@ -426,7 +426,7 @@ export default function PokemonDamageCalculator() {
         {/* Modifiers */}
         <div className="mb-6">
           <h2 className="text-lg font-semibold text-gray-800 mb-3">Modifiers</h2>
-          <div className="space-y-2">
+          <div className="space-y-2 mb-6">
             <label className="flex items-center">
               <input
                 type="checkbox"
@@ -467,86 +467,137 @@ export default function PokemonDamageCalculator() {
         </div>
 
         {/* Results and Optimal SP Configuration */}
-        <div className={`mt-8 relative ${!isPaid ? 'blur-md' : ''}`}>
-          <div className="bg-indigo-50 p-4 rounded-lg mb-4">
-            <h2 className="text-lg font-semibold text-indigo-800 mb-2">Damage Range</h2>
-            <p className="text-2xl font-bold text-center">{damageRange[0]} - {damageRange[1]}</p>
-          </div>
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h2 className="text-lg font-semibold text-blue-800 mb-2">Speed Tier</h2>
-            <p className="text-2xl font-bold text-center">{finalSpeed}</p>
-          </div>
+        <div className="mt-8 mb-8">
+          {!isPaid ? (
+            <div className="relative min-h-[650px]">
+              <div className="absolute inset-0 bg-white bg-opacity-95 flex items-center justify-center rounded-lg p-6 z-10">
+                <div className="text-center max-w-md bg-gradient-to-br from-white to-indigo-50 rounded-xl shadow-xl p-8 border-2 border-indigo-200">
+                  <h2 className="text-2xl md:text-3xl font-bold text-indigo-900 mb-4">Pay $1.99 to Unlock Regulation X Expert Calculation Report</h2>
+                  <p className="text-lg text-gray-700 mb-8">Gain access to professional tournament calculations and optimal SP allocation recommendations</p>
+                  <div className="mb-6">
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          intent: 'CAPTURE',
+                          purchase_units: [{
+                            amount: {
+                              currency_code: 'USD',
+                              value: '1.99'
+                            },
+                            description: 'Pokémon Champions Reg X Calc Pro Access'
+                          }]
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return (actions.order as any).capture().then((details: any) => {
+                          handlePaymentSuccess(details);
+                        });
+                      }}
+                      style={{
+                        layout: 'vertical',
+                        color: 'gold',
+                        shape: 'rect',
+                        label: 'paypal',
+                        size: 'responsive'
+                      }}
+                    />
+                  </div>
+                  <p className="mt-4 text-sm font-medium text-gray-600">Secure payment via PayPal. Digital access only.</p>
+                </div>
+              </div>
+              <div className="blur-md">
+                <div className="bg-indigo-50 p-4 rounded-lg mb-4">
+                  <h2 className="text-lg font-semibold text-indigo-800 mb-2">Damage Range</h2>
+                  <p className="text-2xl font-bold text-center">{damageRange[0]} - {damageRange[1]}</p>
+                </div>
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h2 className="text-lg font-semibold text-blue-800 mb-2">Speed Tier</h2>
+                  <p className="text-2xl font-bold text-center">{finalSpeed}</p>
+                </div>
 
-          {/* Optimal SP Configuration */}
-          <div className="mt-8 bg-green-50 p-4 rounded-lg">
-            <h2 className="text-lg font-semibold text-green-800 mb-3">Optimal SP Configuration</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <h3 className="text-sm font-medium text-gray-700 mb-1">Attack SP</h3>
-                <p className="text-xl font-bold text-center">{optimalSpConfig.attackSp}</p>
-              </div>
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <h3 className="text-sm font-medium text-gray-700 mb-1">Defense SP</h3>
-                <p className="text-xl font-bold text-center">{optimalSpConfig.defenseSp}</p>
-              </div>
-              <div className="bg-white p-3 rounded-lg shadow-sm">
-                <h3 className="text-sm font-medium text-gray-700 mb-1">HP SP</h3>
-                <p className="text-xl font-bold text-center">{optimalSpConfig.hpSp}</p>
+                {/* Optimal SP Configuration */}
+                <div className="mt-8 bg-green-50 p-4 rounded-lg">
+                  <h2 className="text-lg font-semibold text-green-800 mb-3">Optimal SP Configuration</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-white p-3 rounded-lg shadow-sm">
+                      <h3 className="text-sm font-medium text-gray-700 mb-1">Attack SP</h3>
+                      <p className="text-xl font-bold text-center">{optimalSpConfig.attackSp}</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg shadow-sm">
+                      <h3 className="text-sm font-medium text-gray-700 mb-1">Defense SP</h3>
+                      <p className="text-xl font-bold text-center">{optimalSpConfig.defenseSp}</p>
+                    </div>
+                    <div className="bg-white p-3 rounded-lg shadow-sm">
+                      <h3 className="text-sm font-medium text-gray-700 mb-1">HP SP</h3>
+                      <p className="text-xl font-bold text-center">{optimalSpConfig.hpSp}</p>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="text-sm font-medium text-gray-700 mb-2">Can OHKO:</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {optimalSpConfig.OHKOOpponents.length > 0 ? (
+                        optimalSpConfig.OHKOOpponents.map((opponent) => (
+                          <span key={opponent} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                            {opponent}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 text-sm">Cannot OHKO any popular opponents</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="mt-4">
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Can OHKO:</h3>
-              <div className="flex flex-wrap gap-2">
-                {optimalSpConfig.OHKOOpponents.length > 0 ? (
-                  optimalSpConfig.OHKOOpponents.map((opponent) => (
-                    <span key={opponent} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
-                      {opponent}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-gray-500 text-sm">Cannot OHKO any popular opponents</span>
-                )}
+          ) : (
+            <div>
+              <div className="bg-indigo-50 p-4 rounded-lg mb-4">
+                <h2 className="text-lg font-semibold text-indigo-800 mb-2">Damage Range</h2>
+                <p className="text-2xl font-bold text-center">{damageRange[0]} - {damageRange[1]}</p>
               </div>
-            </div>
-          </div>
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-blue-800 mb-2">Speed Tier</h2>
+                <p className="text-2xl font-bold text-center">{finalSpeed}</p>
+              </div>
 
-          {/* Payment Wall */}
-          {!isPaid && (
-            <div className="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center rounded-lg p-6">
-              <div className="text-center max-w-md">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Unlock Pro Calculations</h2>
-                <p className="text-gray-600 mb-6">Pay $1.99 for pro tournament calculations and optimal SP allocation recommendations</p>
-                <PayPalButtons
-                  createOrder={(data, actions) => {
-                    return actions.order.create({
-                      purchase_units: [{
-                        amount: {
-                          value: '1.99'
-                        },
-                        description: 'Pokémon Champions Reg X Calc Pro Access'
-                      }]
-                    });
-                  }}
-                  onApprove={(data, actions) => {
-                    return actions.order.capture().then((details: any) => {
-                      handlePaymentSuccess(details);
-                    });
-                  }}
-                  style={{
-                    layout: 'vertical',
-                    color: 'gold',
-                    shape: 'rect',
-                    label: 'paypal'
-                  }}
-                />
-                <p className="mt-4 text-sm text-gray-500">Secure payment via PayPal. Digital access only.</p>
+              {/* Optimal SP Configuration */}
+              <div className="mt-8 bg-green-50 p-4 rounded-lg">
+                <h2 className="text-lg font-semibold text-green-800 mb-3">Optimal SP Configuration</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="bg-white p-3 rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-gray-700 mb-1">Attack SP</h3>
+                    <p className="text-xl font-bold text-center">{optimalSpConfig.attackSp}</p>
+                  </div>
+                  <div className="bg-white p-3 rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-gray-700 mb-1">Defense SP</h3>
+                    <p className="text-xl font-bold text-center">{optimalSpConfig.defenseSp}</p>
+                  </div>
+                  <div className="bg-white p-3 rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-gray-700 mb-1">HP SP</h3>
+                    <p className="text-xl font-bold text-center">{optimalSpConfig.hpSp}</p>
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-700 mb-2">Can OHKO:</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {optimalSpConfig.OHKOOpponents.length > 0 ? (
+                      optimalSpConfig.OHKOOpponents.map((opponent) => (
+                        <span key={opponent} className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">
+                          {opponent}
+                        </span>
+                      ))
+                    ) : (
+                      <span className="text-gray-500 text-sm">Cannot OHKO any popular opponents</span>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
         </div>
 
         {/* Core Logic Explanation */}
-        <div className="mt-8 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+        <div className="mt-12 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
           <h3 className="font-semibold mb-2">Core Logic:</h3>
           <ul className="list-disc pl-5 space-y-1">
             <li>IV fixed at 31</li>
