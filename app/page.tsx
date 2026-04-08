@@ -497,8 +497,7 @@ export default function PokemonDamageCalculator() {
                         layout: 'vertical',
                         color: 'gold',
                         shape: 'rect',
-                        label: 'paypal',
-                        size: 'responsive'
+                        label: 'paypal'
                       }}
                     />
                   </div>
